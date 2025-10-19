@@ -16,7 +16,7 @@ export const state = {
 
 const createRecipe = function (data) {
   if (!data || !data.data || !data.data.recipe)
-    throw new Error('Please Select a Recipe For Deploying');
+    throw new Error('Choose a recipe from the list to explore its delicious details!');
   let { recipe } = data.data;
   return {
     id: recipe.id,
