@@ -1,6 +1,6 @@
 import { MSG_APPESRING_SECS } from './config.js';
 import * as model from './model.js';
-import SearchResultsView from './views/ searchResultsView.js';
+import SearchResultsView from './views/searchResultsView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import paginationView from './views/paginationView.js';

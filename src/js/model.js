@@ -1,5 +1,5 @@
-import { getJson , sendJs0n , AJAX} from './helpers';
-import { RES_PER_PAGE , API_URL , KEY } from './config.js';
+import { getJson, sendJs0n, AJAX } from './helpers';
+import { RES_PER_PAGE, API_URL, KEY } from './config.js';
 export const state = {
   recipe: {},
   search: {
@@ -14,24 +14,27 @@ export const state = {
 // state.recipe = { name: 'mahmoud', Lname: 'ali' };
 //
 
-const createRecipe = function(data){
-  let {recipe} = data.data
+const createRecipe = function (data) {
+  if (!data || !data.data || !data.data.recipe)
+    throw new Error('Invalid recipe data received from API');
+  let { recipe } = data.data;
   return {
-      id: recipe.id,
-      publisher: recipe.publisher,
-      url: recipe.source_url,
-      image: recipe.image_url,
-      ingredients: recipe.ingredients,
-      cookingTime: recipe.cooking_time,
-      title: recipe.title,
-      servings: recipe.servings,
-      ...(recipe.key && {key:recipe.key})
-    }
-}
+    id: recipe.id,
+    publisher: recipe.publisher,
+    url: recipe.source_url,
+    image: recipe.image_url,
+    ingredients: recipe.ingredients,
+    cookingTime: recipe.cooking_time,
+    title: recipe.title,
+    servings: recipe.servings,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
 
 export const loadRecipe = async function (id) {
   try {
     const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
+    console.log(data);
 
     if (data.status === 'fail') {
       throw new Error(data.message);
@@ -59,10 +62,9 @@ export const loadSearch = async function (query) {
         publisher: rec.publisher,
         image: rec.image_url,
         title: rec.title,
-        ...(rec.key && {key:rec.key})
+        ...(rec.key && { key: rec.key }),
       };
     });
-    
   } catch (err) {
     throw err;
   }
@@ -89,7 +91,7 @@ const saveBookMarks = function () {
 
 const retrieveBookMarks = function () {
   const storage = JSON.parse(localStorage.getItem('BookMarks'));
-  if(!storage)return
+  if (!storage) return;
   state.bookMarks = storage;
 };
 
@@ -106,39 +108,35 @@ export const removeFromBookMarks = function (recipe) {
 };
 
 export const addRecipe = async function (newRecipe) {
-try{  
-  const ingredients = Object.entries(newRecipe).filter(
-    entry => entry[0].startsWith('ingredient') && entry[1] !== ''
-  ).map(ing=>{
-    const ingArr = ing[1].replaceAll(' ' , '').split(',')
-    if(ingArr.length !==3)throw new Error('Please Follow The Format in Igredients :)')
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
+      .map(ing => {
+        const ingArr = ing[1].replaceAll(' ', '').split(',');
+        if (ingArr.length !== 3)
+          throw new Error('Please Follow The Format in Igredients :)');
 
-    const [quantity , unit , description] = ingArr
-    return{quantity:quantity?+quantity:null , unit , description}
-  })
+        const [quantity, unit, description] = ingArr;
+        return { quantity: quantity ? +quantity : null, unit, description };
+      });
 
-    
+    const sentRecipe = {
+      cooking_time: newRecipe.cookingTime,
+      image_url: newRecipe.image,
+      publisher: newRecipe.publisher,
+      servings: newRecipe.servings,
+      source_url: newRecipe.sourceUrl,
+      title: newRecipe.title,
+      ingredients,
+    };
 
-  const sentRecipe = {
-    cooking_time: newRecipe.cookingTime,    
-    image_url: newRecipe.image,
-    publisher: newRecipe.publisher,
-    servings: newRecipe.servings,
-    source_url : newRecipe.sourceUrl,
-    title: newRecipe.title,
-    ingredients,
+    const data = await AJAX(`${API_URL}?key=${KEY}`, sentRecipe);
+    const recipe = createRecipe(data);
+    state.recipe = recipe;
+    addToBookMarks(recipe);
+  } catch (err) {
+    throw err;
   }
-
-  const data = await AJAX(`${API_URL}?key=${KEY}` , sentRecipe )
-  const recipe = createRecipe(data)
-  state.recipe = recipe
-  addToBookMarks(recipe)
-  
-
-
-}catch(err){
-  throw err
-}
 };
 
 retrieveBookMarks();
