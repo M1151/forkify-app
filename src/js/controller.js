@@ -22,6 +22,8 @@ const controlRecipe = async function () {
 
     SearchResultsView.update(model.getSearchResultsPageContent());
     //load recipe
+    // Temporary delay to test spinner visibility
+    await new Promise(resolve => setTimeout(resolve, 2000));
     await model.loadRecipe(id);
     const { recipe } = model.state;
 
@@ -60,6 +62,8 @@ const controlServings = function (newServings) {
 };
 
 const controlBookMarks = function () {
+  if (!model.state.recipe) return;
+  
   if (model.state.recipe.bookMarked)
     model.removeFromBookMarks(model.state.recipe);
   else model.addToBookMarks(model.state.recipe);

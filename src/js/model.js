@@ -1,4 +1,4 @@
-import { getJson, sendJs0n, AJAX } from './helpers';
+import {AJAX } from './helpers';
 import { RES_PER_PAGE, API_URL, KEY } from './config.js';
 export const state = {
   recipe: {},
@@ -16,7 +16,7 @@ export const state = {
 
 const createRecipe = function (data) {
   if (!data || !data.data || !data.data.recipe)
-    throw new Error('Invalid recipe data received from API');
+    throw new Error('Please Select a Recipe For Deploying');
   let { recipe } = data.data;
   return {
     id: recipe.id,

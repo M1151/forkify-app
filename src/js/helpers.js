@@ -28,35 +28,3 @@ export const AJAX = async function (url, data = undefined) {
     throw err;
   }
 };
-
-// export const getJson = async function (url) {
-//   try {
-//     const fetchPro = fetch(url);
-
-//     const res = await Promise.race([fetchPro, timeOut()]);
-
-//     if (!res) return;
-//     return await res.json();
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
-// export const sendJson = async function (url, data) {
-//   try {
-//     const fetchPro = fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(data),
-//     });
-
-//     const res = await Promise.race([fetchPro, timeOut()]);
-
-//     if (!res) return;
-//     return await res.json();
-//   } catch (err) {
-//     throw err;
-//   }
-// };

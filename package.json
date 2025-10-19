@@ -4,7 +4,7 @@
   "description": "recipie provider",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html",
+    "build": "parcel build index.html --public-url ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bedair",
