@@ -34,7 +34,6 @@ const createRecipe = function (data) {
 export const loadRecipe = async function (id) {
   try {
     const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
-    console.log(data);
 
     if (data.status === 'fail') {
       throw new Error(data.message);
